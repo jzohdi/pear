@@ -124,6 +124,7 @@ interface WorkflowState {
   interface: InterfaceState;
   implementation: ImplementationState;
   testing: TestingState;
+  completion: CompletionState;
   
   // ─────────────────────────────────────────────────────────────
   // Conversation History
@@ -334,6 +335,23 @@ interface TestingState {
   
   /** Whether the evidence document has been generated */
   testEvidenceGenerated: boolean;
+}
+
+/**
+ * State for Phase 5: Completion
+ */
+interface CompletionState {
+  /** When the session was completed (null if not yet complete) */
+  completedAt: Date | null;
+  
+  /** Whether the session has been archived */
+  archived: boolean;
+  
+  /** Path to the archived session file */
+  archivePath: string | null;
+  
+  /** Summary generated at completion */
+  summary: string | null;
 }
 
 /**
@@ -783,7 +801,7 @@ type ProjectType = 'typescript' | 'javascript' | 'unknown';
 
 ```typescript
 /**
- * CLI configuration (stored in .pear/config.json)
+ * CLI configuration (stored in .pear/config.yaml)
  */
 interface PearConfig {
   /** Version of the config schema */
@@ -816,6 +834,7 @@ export type { PlanningState };
 export type { InterfaceState, DependencyAnalysis, DependencyNode };
 export type { ImplementationState, ImplementationUnit, TestImplementation };
 export type { TestingState, TestRunResult, TestResult, TestError, TestFailure, ManualTest };
+export type { CompletionState };
 
 // Messages
 export type { Message };

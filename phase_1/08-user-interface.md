@@ -364,7 +364,7 @@ Files Created
   ✓ src/features/auth/__tests__/auth.test.ts
   ✓ src/features/auth/TEST_EVIDENCE.md
 
-Session archived: .pear/sessions/done/abc123.json
+Session archived: .pear/sessions/done/abc123.yaml
 
 ──────────────────────────────────────────────────────────────────────
 💡 Tip: Don't forget to commit these changes to git!

@@ -434,18 +434,19 @@ interface SessionSummary {
 ```
 .pear/
 ├── sessions/
-│   ├── abc123.json           # Active session
-│   ├── abc123.backup.json    # Previous checkpoint
+│   ├── abc123.yaml           # Active session
+│   ├── abc123.backup.yaml    # Previous checkpoint
 │   └── done/                 # Archived sessions
-│       └── def456.json
-└── config.json
+│       └── def456.yaml
+└── config.yaml
 ```
 
 ### Implementation Notes
 
 - Generate session IDs with `uuid.v4()`
 - Always create backup before overwriting checkpoint
-- Validate JSON structure on load
+- Use `js-yaml` for YAML serialization/deserialization
+- Validate YAML structure on load
 - Handle missing/corrupted files gracefully
 
 ---

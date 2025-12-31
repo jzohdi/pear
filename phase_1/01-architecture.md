@@ -202,7 +202,7 @@ State Change (any)
 ┌─────────────┐    ┌─────────────┐
 │ Backup      │    │ Current     │
 │ (previous)  │    │ (new)       │
-│ .backup.json│    │ .json       │
+│ .backup.yaml│    │ .yaml       │
 └─────────────┘    └─────────────┘
 ```
 

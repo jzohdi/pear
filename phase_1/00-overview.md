@@ -85,7 +85,7 @@ These features will be implemented in Phase 1:
 | | Test implementation in Phase 3 |
 | | Manual test recording |
 | | TEST_EVIDENCE.md generation |
-| **Persistence** | JSON session storage |
+| **Persistence** | YAML session storage |
 | | Checkpoint/resume |
 | | Crash recovery (backup checkpoints) |
 | **UI** | Terminal-based CLI |
@@ -152,13 +152,17 @@ See [10-implementation-plan.md](./10-implementation-plan.md) for detailed daily 
   "dependencies": {
     "@anthropic-ai/sdk": "^0.30.0",
     "chalk": "^5.3.0",
+    "commander": "^12.0.0",
     "inquirer": "^9.2.0",
+    "js-yaml": "^4.1.0",
     "marked": "^12.0.0",
     "marked-terminal": "^7.0.0",
+    "ora": "^8.0.0",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@types/inquirer": "^9.0.0",
+    "@types/js-yaml": "^4.0.0",
     "@types/node": "^20.0.0",
     "@types/uuid": "^9.0.0",
     "typescript": "^5.4.0",

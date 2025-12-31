@@ -87,11 +87,11 @@ describe('StateManager', () => {
   });
   
   describe('saveCheckpoint', () => {
-    it('should persist session to JSON', async () => {
+    it('should persist session to YAML', async () => {
       const session = manager.createSession({ featureName: 'Test' });
       await manager.saveCheckpoint(session);
       
-      const filePath = path.join(tempDir, 'sessions', `${session.sessionId}.json`);
+      const filePath = path.join(tempDir, 'sessions', `${session.sessionId}.yaml`);
       const exists = await fs.access(filePath).then(() => true).catch(() => false);
       
       expect(exists).toBe(true);
@@ -105,7 +105,7 @@ describe('StateManager', () => {
       session.featureName = 'Test Modified';
       await manager.saveCheckpoint(session);
       
-      const backupPath = path.join(tempDir, 'sessions', `${session.sessionId}.backup.json`);
+      const backupPath = path.join(tempDir, 'sessions', `${session.sessionId}.backup.yaml`);
       const backupExists = await fs.access(backupPath).then(() => true).catch(() => false);
       
       expect(backupExists).toBe(true);
@@ -142,7 +142,7 @@ describe('StateManager', () => {
       await manager.saveCheckpoint(session);
       
       // Corrupt primary file
-      const primaryPath = path.join(tempDir, 'sessions', `${session.sessionId}.json`);
+      const primaryPath = path.join(tempDir, 'sessions', `${session.sessionId}.yaml`);
       await fs.writeFile(primaryPath, 'not valid json');
       
       // Restore
@@ -655,6 +655,12 @@ export function createMockState(overrides?: Partial<WorkflowState>): WorkflowSta
       manualTestsComplete: false,
       testEvidencePath: null,
       testEvidenceGenerated: false,
+    },
+    completion: {
+      completedAt: null,
+      archived: false,
+      archivePath: null,
+      summary: null,
     },
     messages: [],
     ...overrides,

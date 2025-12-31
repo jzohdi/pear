@@ -86,7 +86,7 @@ Each phase has:
 | LLM Provider | Anthropic Claude | Best reasoning for code |
 | CLI Framework | Inquirer | Interactive prompts |
 | Test Framework | Vitest | Fast, TypeScript-native |
-| Storage | JSON files | Simple, human-readable |
+| Storage | YAML files | Human-readable, matches README spec |
 
 ---
 

@@ -65,6 +65,75 @@ The workflow follows a strict phase progression with mandatory human approval at
 4. Set `phaseStatus = 'in_progress'`
 5. Checkpoint state
 
+---
+
+## Interface Phase Internal Flow
+
+The Interface phase has multiple approval steps:
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│                    INTERFACE PHASE FLOW                           │
+│                                                                  │
+│   ┌────────────────┐                                             │
+│   │ Start          │                                             │
+│   │ Interface      │                                             │
+│   └───────┬────────┘                                             │
+│           │                                                       │
+│           ▼                                                       │
+│   ┌────────────────┐     ┌───────────────┐                       │
+│   │ Generate       │────▶│  Types        │                       │
+│   │ Types (LLM)    │     │  Approval     │                       │
+│   └────────────────┘     └───────┬───────┘                       │
+│                                  │ approved                      │
+│                                  ▼                               │
+│   ┌────────────────┐     ┌───────────────┐                       │
+│   │ Generate       │────▶│  Tests        │                       │
+│   │ Tests (LLM)    │     │  Approval     │                       │
+│   └────────────────┘     └───────┬───────┘                       │
+│                                  │ approved                      │
+│                                  ▼                               │
+│   ┌────────────────┐     ┌───────────────┐                       │
+│   │ Analyze        │────▶│  Order        │                       │
+│   │ Dependencies   │     │  Approval     │                       │
+│   │ (LLM)          │     └───────┬───────┘                       │
+│   └────────────────┘             │ approved                      │
+│                                  ▼                               │
+│                         ┌───────────────┐                        │
+│                         │ Transition to │                        │
+│                         │ Implementation│                        │
+│                         └───────────────┘                        │
+│                                                                  │
+└──────────────────────────────────────────────────────────────────┘
+```
+
+### Step 1: Type Generation
+
+1. LLM generates type definitions based on the design document
+2. Human reviews and can:
+   - **Approve**: Types are saved, proceed to tests
+   - **Modify**: Provide feedback, LLM regenerates
+3. State update: `interface.typesContent` is populated
+
+### Step 2: Test Skeleton Generation
+
+1. LLM generates test skeletons based on approved types
+2. Human can describe behaviors they want tested
+3. LLM suggests additional test cases with rationale
+4. Human reviews and can:
+   - **Approve**: Tests are saved, proceed to dependency analysis
+   - **Add/Remove**: Modify test cases
+5. State update: `interface.testsContent` is populated
+
+### Step 3: Dependency Analysis
+
+1. LLM analyzes function dependencies from the types
+2. LLM suggests implementation order (leaf-first)
+3. Human reviews and can:
+   - **Approve**: Order is saved, transition to Implementation
+   - **Modify**: Adjust the order
+4. State update: `interface.dependencyAnalysis` is populated with `orderApproved = true`
+
 **Validation**:
 - Design document content must exist
 - Design document must not be empty

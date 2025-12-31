@@ -39,7 +39,7 @@ pear-cli/
 │   │
 │   ├── state/
 │   │   ├── manager.ts        # State management
-│   │   ├── storage.ts        # JSON persistence
+│   │   ├── storage.ts        # YAML persistence
 │   │   └── validation.ts     # State validation
 │   │
 │   ├── llm/
@@ -81,7 +81,7 @@ pear-cli/
 │       └── runner.test.ts
 │
 └── .pear/                    # Created at runtime (for CLI development)
-    ├── config.json
+    ├── config.yaml
     └── sessions/
 ```
 
@@ -203,12 +203,12 @@ When using the CLI on a project, these files are created:
 ```
 target-project/
 ├── .pear/
-│   ├── config.json           # Project configuration
+│   ├── config.yaml           # Project configuration
 │   └── sessions/
-│       ├── {session-id}.json         # Active session state
-│       ├── {session-id}.backup.json  # Previous checkpoint
+│       ├── {session-id}.yaml         # Active session state
+│       ├── {session-id}.backup.yaml  # Previous checkpoint
 │       └── done/                     # Archived sessions
-│           └── {old-session}.json
+│           └── {old-session}.yaml
 │
 └── src/features/{feature}/
     ├── DESIGN.md             # Phase 1: Design document
@@ -224,80 +224,81 @@ target-project/
 
 ## Configuration Files
 
-### `.pear/config.json`
+### `.pear/config.yaml`
 
-```json
-{
-  "version": 1,
-  "defaultFeaturePath": "src/features",
-  "testCommand": "npx vitest run"
-}
+```yaml
+version: 1
+defaultFeaturePath: src/features
+testCommand: npx vitest run
 ```
 
-### `.pear/sessions/{session-id}.json`
+### `.pear/sessions/{session-id}.yaml`
 
-```json
-{
-  "sessionId": "abc123",
-  "featureName": "User Authentication",
-  "featurePath": "src/features/auth",
-  "createdAt": "2025-01-15T10:00:00.000Z",
-  "lastActivityAt": "2025-01-15T12:30:00.000Z",
-  "currentPhase": "implementation",
-  "phaseStatus": "in_progress",
-  "planning": {
-    "designDocContent": "# Feature: User Authentication...",
-    "designDocPath": "src/features/auth/DESIGN.md",
-    "approved": true
-  },
-  "interface": {
-    "typesContent": "export interface AuthConfig {...}",
-    "typesPath": "src/features/auth/types.ts",
-    "testsContent": "describe('AuthService', () => {...})",
-    "testsPath": "src/features/auth/__tests__/auth.test.ts",
-    "approved": true,
-    "dependencyAnalysis": {
-      "graph": [...],
-      "suggestedOrder": ["getOAuthUrl", "createSession", ...],
-      "orderApproved": true
-    }
-  },
-  "implementation": {
-    "units": [
-      {
-        "id": "unit-1",
-        "name": "getOAuthUrl",
-        "description": "Generate OAuth redirect URL",
-        "filePath": "src/features/auth/oauth.ts",
-        "status": "approved",
-        "implementation": "export function getOAuthUrl(...) {...}",
-        "dependencies": []
-      }
-    ],
-    "currentUnitIndex": 3,
-    "dependencyOrder": ["unit-1", "unit-2", "unit-3", "unit-4", "unit-5"],
-    "testImplementations": [...],
-    "currentTestIndex": 0,
-    "stage": "production"
-  },
-  "testing": {
-    "testRuns": [],
-    "lastTestRun": null,
-    "debugIterations": 0,
-    "manualTests": [],
-    "manualTestsComplete": false,
-    "testEvidencePath": null,
-    "testEvidenceGenerated": false
-  },
-  "messages": [
-    {
-      "role": "user",
-      "content": "Add Google OAuth authentication...",
-      "timestamp": "2025-01-15T10:00:00.000Z",
-      "phase": "planning"
-    }
-  ]
-}
+```yaml
+sessionId: abc123
+featureName: User Authentication
+featurePath: src/features/auth
+createdAt: 2025-01-15T10:00:00.000Z
+lastActivityAt: 2025-01-15T12:30:00.000Z
+currentPhase: implementation
+phaseStatus: in_progress
+
+planning:
+  designDocContent: |
+    # Feature: User Authentication...
+  designDocPath: src/features/auth/DESIGN.md
+  approved: true
+
+interface:
+  typesContent: |
+    export interface AuthConfig {...}
+  typesPath: src/features/auth/types.ts
+  testsContent: |
+    describe('AuthService', () => {...})
+  testsPath: src/features/auth/__tests__/auth.test.ts
+  approved: true
+  dependencyAnalysis:
+    graph: [...]
+    suggestedOrder:
+      - getOAuthUrl
+      - createSession
+    orderApproved: true
+
+implementation:
+  units:
+    - id: unit-1
+      name: getOAuthUrl
+      description: Generate OAuth redirect URL
+      filePath: src/features/auth/oauth.ts
+      status: approved
+      implementation: |
+        export function getOAuthUrl(...) {...}
+      dependencies: []
+  currentUnitIndex: 3
+  dependencyOrder:
+    - unit-1
+    - unit-2
+    - unit-3
+    - unit-4
+    - unit-5
+  testImplementations: [...]
+  currentTestIndex: 0
+  stage: production
+
+testing:
+  testRuns: []
+  lastTestRun: null
+  debugIterations: 0
+  manualTests: []
+  manualTestsComplete: false
+  testEvidencePath: null
+  testEvidenceGenerated: false
+
+messages:
+  - role: user
+    content: Add Google OAuth authentication...
+    timestamp: 2025-01-15T10:00:00.000Z
+    phase: planning
 ```
 
 ---
@@ -328,6 +329,7 @@ target-project/
     "chalk": "^5.3.0",
     "commander": "^12.0.0",
     "inquirer": "^9.2.0",
+    "js-yaml": "^4.1.0",
     "marked": "^12.0.0",
     "marked-terminal": "^7.0.0",
     "ora": "^8.0.0",
@@ -335,6 +337,7 @@ target-project/
   },
   "devDependencies": {
     "@types/inquirer": "^9.0.0",
+    "@types/js-yaml": "^4.0.0",
     "@types/node": "^20.0.0",
     "@types/uuid": "^9.0.0",
     "typescript": "^5.4.0",
